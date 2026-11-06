@@ -3,103 +3,135 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#101116">
-  <title>Orbit — Scientific Calculator</title>
+  <meta name="theme-color" content="#fff6f1">
+  <title>Orbit — Fun Scientific Calculator</title>
   <style>
     :root {
-      color-scheme: dark;
-      --page: #0c0d12;
-      --panel: #15161d;
-      --panel-raised: #1b1c25;
-      --display: #111219;
-      --key: #22232d;
-      --key-hover: #30313e;
-      --text: #f3f4fa;
-      --muted: #898b9c;
-      --line: #292a35;
-      --blue: #70a7ff;
-      --purple: #a88bff;
-      --shadow: 0 30px 90px #0008;
-    }
-    :root[data-theme="light"] {
       color-scheme: light;
-      --page: #f0f2f8;
-      --panel: #fff;
-      --panel-raised: #f4f5fa;
-      --display: #f5f6fb;
-      --key: #eef0f6;
-      --key-hover: #e2e5ef;
-      --text: #191b27;
-      --muted: #777b8d;
-      --line: #e5e7ef;
-      --blue: #3978e8;
-      --purple: #7956df;
-      --shadow: 0 24px 70px #3039551c;
+      --page: #fff8f1;
+      --panel: #ffffff;
+      --panel-raised: #fff5eb;
+      --display: #eaf8ff;
+      --key: #e7f4ff;
+      --key-hover: #cfeaff;
+      --text: #27324a;
+      --muted: #7d89a2;
+      --line: #e5e8f2;
+      --blue: #3296e8;
+      --purple: #895be8;
+      --shadow: 0 20px 55px #5047781a, 0 4px 12px #5047780c;
+    }
+    :root[data-theme="dark"] {
+      color-scheme: dark;
+      --page: #232238;
+      --panel: #302f48;
+      --panel-raised: #3a3855;
+      --display: #292f4a;
+      --key: #41405d;
+      --key-hover: #535173;
+      --text: #fff9f3;
+      --muted: #c1bfd6;
+      --line: #4b4967;
+      --blue: #8ed3ff;
+      --purple: #d3a9ff;
+      --shadow: 0 20px 55px #11101e66;
     }
     * { box-sizing: border-box; }
     body {
       margin: 0; min-height: 100vh; display: grid; place-items: center;
-      padding: 32px 18px; background: radial-gradient(ellipse at 50% 0%, #272141 0, var(--page) 48%);
-      color: var(--text); font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 30px 18px;
+      background: radial-gradient(ellipse at 8% 12%, #dff5ff 0, transparent 32%),
+        radial-gradient(ellipse at 92% 88%, #ffe1ef 0, transparent 33%),
+        linear-gradient(135deg, #fff8e9, #fff2f7 52%, #f0f4ff);
+      color: var(--text);
+      font-family: "Trebuchet MS", "Arial Rounded MT Bold", ui-rounded, system-ui, sans-serif;
       transition: background .25s, color .25s;
     }
-    :root[data-theme="light"] body { background: radial-gradient(ellipse at 50% 0%, #dfe7ff 0, var(--page) 55%); }
+    :root[data-theme="dark"] body {
+      background: radial-gradient(ellipse at 8% 12%, #3b5174 0, transparent 35%),
+        radial-gradient(ellipse at 92% 88%, #603c65 0, transparent 36%), var(--page);
+    }
     button { font: inherit; }
-    .app { width: min(100%, 1050px); }
+    .app { width: min(100%, 1080px); position: relative; }
     .topbar { display: flex; justify-content: space-between; align-items: center; margin: 0 2px 18px; }
     .brand { display: flex; align-items: center; gap: 12px; }
-    .brand-mark { width: 38px; height: 38px; display: grid; place-items: center; border-radius: 12px; color: white; font-weight: 800; background: linear-gradient(140deg, #5eaaff, #9a6cff); box-shadow: 0 6px 24px #765dff55; }
-    .brand-name { font-weight: 750; letter-spacing: -.04em; font-size: 19px; }
-    .brand-sub { color: var(--muted); font-size: 11px; margin-top: 2px; letter-spacing: .04em; }
+    .brand-mark { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 16px; color: white; font-weight: 900; font-size: 24px; background: linear-gradient(140deg, #51b8ff, #9a6cff 70%, #ff82b4); box-shadow: 0 7px 0 #6651bb33, 0 12px 24px #765dff2e; transform: rotate(-5deg); }
+    .brand-name { font-weight: 900; letter-spacing: -.05em; font-size: 23px; }
+    .brand-sub { color: var(--muted); font-size: 11px; margin-top: 2px; letter-spacing: .1em; font-weight: 800; }
+    .top-actions { display: flex; gap: 9px; }
     .icon-button, .mode-button, .utility-button {
       border: 1px solid var(--line); background: var(--panel); color: var(--muted);
-      border-radius: 12px; cursor: pointer; transition: .18s ease;
+      border-radius: 14px; cursor: pointer; transition: .18s ease;
     }
-    .icon-button { width: 42px; height: 42px; font-size: 17px; }
-    .icon-button:hover, .mode-button:hover, .utility-button:hover { color: var(--text); border-color: #7770b5; transform: translateY(-1px); }
-    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 275px; gap: 16px; align-items: stretch; }
-    .calculator, .history-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 22px; box-shadow: var(--shadow); }
-    .calculator { padding: 20px; }
-    .display { min-height: 150px; padding: 17px 19px 15px; border: 1px solid var(--line); border-radius: 16px; background: var(--display); margin-bottom: 15px; display: flex; flex-direction: column; }
+    .icon-button { min-width: 44px; height: 44px; padding: 0 10px; font-size: 18px; }
+    .icon-button:hover, .mode-button:hover, .utility-button:hover { color: var(--text); border-color: #ae9be8; transform: translateY(-2px); }
+    .workspace { display: grid; grid-template-columns: minmax(0, 1fr) 275px; gap: 18px; align-items: stretch; }
+    .calculator, .history-panel { background: var(--panel); border: 1px solid #ffffffb8; border-radius: 26px; box-shadow: var(--shadow); }
+    .calculator { padding: 22px; }
+    .display { position: relative; overflow: hidden; min-height: 156px; padding: 17px 19px 15px; border: 2px solid #ffffffb8; border-radius: 21px; background: linear-gradient(135deg, var(--display), #f9f0ff); margin-bottom: 15px; display: flex; flex-direction: column; }
+    :root[data-theme="dark"] .display { background: linear-gradient(135deg, var(--display), #443956); }
+    .display::after { content: "✦"; position: absolute; right: 12px; top: -11px; color: #f5a74e88; font-size: 39px; pointer-events: none; }
     .display-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-    .mode-button { padding: 7px 11px; font-weight: 750; font-size: 11px; letter-spacing: .09em; color: var(--blue); }
+    .mode-button { padding: 8px 13px; font-weight: 900; font-size: 11px; letter-spacing: .09em; color: #278fd1; background: #d7f0ff; border: 0; box-shadow: 0 3px 0 #89c9e8; }
     .expression { color: var(--muted); font-size: clamp(14px, 2vw, 17px); text-align: right; overflow-wrap: anywhere; min-height: 27px; flex: 1; padding-top: 5px; }
     .result-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
-    .result { min-width: 0; width: 100%; text-align: right; font-size: clamp(32px, 6vw, 46px); line-height: 1.2; letter-spacing: -.055em; font-weight: 550; overflow-x: auto; scrollbar-width: none; }
+    .result { min-width: 0; width: 100%; text-align: right; font-size: clamp(36px, 6vw, 50px); line-height: 1.2; letter-spacing: -.055em; font-weight: 900; overflow-x: auto; scrollbar-width: none; color: #4e55bd; }
+    :root[data-theme="dark"] .result { color: #d9c8ff; }
     .result::-webkit-scrollbar { display: none; }
     .result.error { color: #ff777f; font-size: clamp(20px, 4vw, 28px); letter-spacing: -.02em; }
-    .copy-button { flex: 0 0 36px; width: 36px; height: 36px; border: 0; border-radius: 10px; background: transparent; color: var(--muted); cursor: pointer; font-size: 16px; }
-    .copy-button:hover { color: var(--blue); background: var(--key); }
+    .mascot { position: absolute; left: 18px; bottom: 13px; display: flex; align-items: center; gap: 6px; color: #e49a43; font-size: 12px; font-weight: 800; }
+    .mascot-face { display: grid; place-items: center; width: 35px; height: 35px; border-radius: 14px; background: #ffe28c; font-size: 21px; box-shadow: 0 3px 0 #eebd5c; transform: rotate(-7deg); }
+    .copy-button { flex: 0 0 36px; width: 36px; height: 36px; border: 0; border-radius: 12px; background: #ffffff9c; color: var(--muted); cursor: pointer; font-size: 16px; }
+    .copy-button:hover { color: var(--blue); background: var(--panel); }
     .utility-row { display: flex; gap: 8px; margin-bottom: 14px; }
-    .utility-button { flex: 1; min-height: 34px; font-size: 11px; font-weight: 700; }
+    .utility-button { flex: 1; min-height: 37px; font-size: 11px; font-weight: 900; color: #7763c4; background: #f3edff; box-shadow: 0 3px 0 #ded1ff; border: 0; }
+    :root[data-theme="dark"] .utility-button { color: #e3d8ff; background: #51496e; box-shadow: 0 3px 0 #39344f; }
     .keypad { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 9px; }
     .key {
-      min-width: 0; min-height: 51px; padding: 8px 4px; border: 1px solid transparent; border-radius: 12px;
-      background: var(--key); color: var(--text); cursor: pointer; font-size: 15px; font-weight: 600;
+      min-width: 0; min-height: 53px; padding: 8px 4px; border: 1px solid #ffffffa6; border-radius: 16px;
+      background: var(--key); color: #276fae; cursor: pointer; font-size: 16px; font-weight: 900;
+      box-shadow: 0 4px 0 #b5d8f1, 0 7px 11px #4e94c31a;
       transition: transform .14s, background .14s, border-color .14s, box-shadow .14s;
     }
-    .key:hover { background: var(--key-hover); border-color: #7770b54d; transform: translateY(-2px); }
-    .key:active { transform: scale(.96); }
-    .key.function { color: var(--purple); font-size: 13px; }
-    .key.operator { color: var(--blue); font-size: 19px; background: color-mix(in srgb, var(--blue) 8%, var(--key)); }
-    .key.soft { color: var(--muted); font-size: 13px; }
-    .key.danger { color: #ff858d; }
-    .key.equals { color: white; background: linear-gradient(135deg, #478ff0, #8b62ea); border: 0; font-size: 21px; box-shadow: 0 7px 20px #6d63ed38; }
-    .key.equals:hover { background: linear-gradient(135deg, #5ba0ff, #9a74f5); box-shadow: 0 9px 24px #6d63ed55; }
-    .history-panel { padding: 18px 16px; display: flex; flex-direction: column; min-height: 100%; }
+    .key:hover { background: var(--key-hover); border-color: #ffffff; transform: translateY(-2px); box-shadow: 0 6px 0 #a9cfea, 0 10px 15px #4e94c325; }
+    .key:active { transform: translateY(3px) scale(.98); box-shadow: 0 1px 0 #a9cfea; }
+    .key:focus-visible, .icon-button:focus-visible, .utility-button:focus-visible { outline: 3px solid #ffbd4a; outline-offset: 2px; }
+    .key.function { color: #7951cf; background: #f1e8ff; box-shadow: 0 4px 0 #d9c5ff, 0 7px 11px #7951cf16; font-size: 13px; }
+    .key.function:hover { background: #e6d5ff; }
+    .key.function:nth-child(4n + 2), .key.function:nth-child(4n + 4) { color: #b34f83; background: #ffe6f1; box-shadow: 0 4px 0 #f6bfd8, 0 7px 11px #d65b9816; }
+    .key.function:nth-child(4n + 2):hover, .key.function:nth-child(4n + 4):hover { background: #ffd5e8; }
+    .key.operator { color: #ad590e; font-size: 20px; background: #ffe5a7; box-shadow: 0 4px 0 #efc96a, 0 7px 11px #cc8c241a; }
+    .key.operator:hover { background: #ffda7c; }
+    .key.soft { color: #53617b; font-size: 13px; background: #e9f8f2; box-shadow: 0 4px 0 #b7e5d2, 0 7px 11px #4eaa8117; }
+    .key.danger { color: #a83e50; background: #ffdfe2; box-shadow: 0 4px 0 #f2afb9, 0 7px 11px #db5e701a; }
+    .key.equals { color: white; background: linear-gradient(135deg, #54d89a, #23ba83); border: 0; font-size: 24px; box-shadow: 0 5px 0 #149c70, 0 8px 17px #23ba8340; }
+    .key.equals:hover { background: linear-gradient(135deg, #6be6aa, #32c993); box-shadow: 0 7px 0 #149c70, 0 11px 20px #23ba8355; }
+    :root[data-theme="dark"] .key { color: #e4f4ff; background: #3d5973; box-shadow: 0 4px 0 #2b435a; }
+    :root[data-theme="dark"] .key.function { color: #e7d5ff; background: #554773; box-shadow: 0 4px 0 #403457; }
+    :root[data-theme="dark"] .key.function:nth-child(4n + 2), :root[data-theme="dark"] .key.function:nth-child(4n + 4) { color: #ffc9e2; background: #68435a; box-shadow: 0 4px 0 #503348; }
+    :root[data-theme="dark"] .key.operator { color: #ffe3a2; background: #68583d; box-shadow: 0 4px 0 #51432d; }
+    :root[data-theme="dark"] .key.soft { color: #c5f2dc; background: #3e615b; box-shadow: 0 4px 0 #304c47; }
+    :root[data-theme="dark"] .key.danger { color: #ffc0c7; background: #704652; box-shadow: 0 4px 0 #573540; }
+    :root[data-theme="dark"] .key.equals { color: white; background: linear-gradient(135deg, #54d89a, #23ba83); box-shadow: 0 5px 0 #149c70; }
+    .history-panel { padding: 19px 17px; display: flex; flex-direction: column; min-height: 100%; }
     .history-head { display: flex; align-items: center; justify-content: space-between; padding: 2px 2px 15px; border-bottom: 1px solid var(--line); }
-    .history-title { font-size: 14px; font-weight: 750; }
-    .clear-history { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; }
+    .history-title { font-size: 16px; font-weight: 900; }
+    .clear-history { border: 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 11px; font-weight: 800; }
     .clear-history:hover { color: #ff858d; }
     .history-list { overflow-y: auto; max-height: 500px; }
-    .history-empty { color: var(--muted); text-align: center; font-size: 12px; line-height: 1.6; margin: auto; padding: 35px 9px; }
-    .history-item { padding: 13px 3px; border-bottom: 1px solid var(--line); cursor: pointer; animation: appear .22s ease both; }
+    .history-empty { color: var(--muted); text-align: center; font-size: 12px; line-height: 1.7; margin: auto; padding: 35px 9px; }
+    .history-item { padding: 13px 9px; border-bottom: 1px solid var(--line); cursor: pointer; border-radius: 12px; animation: appear .22s ease both; }
+    .history-item:hover { background: var(--panel-raised); }
     .history-item:hover .history-value { color: var(--blue); }
     .history-expression { color: var(--muted); font-size: 11px; overflow-wrap: anywhere; line-height: 1.5; }
-    .history-value { font-size: 18px; margin-top: 4px; font-weight: 600; transition: color .15s; }
-    .hint { margin: 14px 3px 0; color: var(--muted); font-size: 10px; line-height: 1.7; }
+    .history-value { font-size: 18px; margin-top: 4px; font-weight: 800; transition: color .15s; }
+    .hint { min-height: 20px; margin: 14px 3px 0; color: var(--muted); font-size: 11px; line-height: 1.7; }
+    .hint.cheer { color: #8a58d1; font-weight: 900; animation: cheer .45s ease both; }
     kbd { font: inherit; background: var(--key); border: 1px solid var(--line); border-radius: 4px; padding: 1px 4px; }
     @keyframes appear { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes cheer { 0% { transform: scale(.9); } 55% { transform: scale(1.04); } 100% { transform: scale(1); } }
+    @keyframes answer-pop { 0% { transform: scale(.92); } 65% { transform: scale(1.06); } 100% { transform: scale(1); } }
+    .result.celebrate { animation: answer-pop .38s cubic-bezier(.2,.8,.2,1); }
     @media (max-width: 760px) {
       body { padding: 20px 12px; }
       .workspace { grid-template-columns: 1fr; }
@@ -110,11 +142,20 @@
     @media (max-width: 430px) {
       .calculator { padding: 12px; border-radius: 18px; }
       .keypad { gap: 6px; }
-      .key { min-height: 47px; font-size: 14px; border-radius: 10px; }
-      .key.function { font-size: 11px; }
+      .key { min-height: 47px; font-size: 14px; border-radius: 12px; }
+      .key.function { font-size: 10px; }
       .key.soft { font-size: 11px; }
       .display { min-height: 135px; padding: 13px; }
       .topbar { margin-bottom: 13px; }
+      .brand-sub { font-size: 9px; }
+      .icon-button { min-width: 40px; height: 40px; }
+      .top-actions { gap: 6px; }
+      .mascot { left: 13px; }
+    }
+    @media (max-width: 350px) {
+      .calculator { padding: 9px; }
+      .keypad { gap: 5px; }
+      .key { min-height: 43px; padding: 6px 2px; }
     }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: .01ms !important; transition-duration: .01ms !important; } }
   </style>
@@ -123,13 +164,17 @@
   <main class="app">
     <header class="topbar">
       <div class="brand"><div class="brand-mark">∑</div><div><div class="brand-name">orbit</div><div class="brand-sub">SCIENTIFIC CALCULATOR</div></div></div>
-      <button class="icon-button" id="theme-toggle" aria-label="Switch theme" title="Toggle light and dark theme">☼</button>
+      <div class="top-actions">
+        <button class="icon-button" id="sound-toggle" aria-label="Mute sounds" title="Mute button sounds">♫</button>
+        <button class="icon-button" id="theme-toggle" aria-label="Switch to dark theme" title="Toggle light and dark theme">☾</button>
+      </div>
     </header>
     <div class="workspace">
       <section class="calculator" aria-label="Scientific calculator">
         <div class="display" aria-live="polite">
           <div class="display-top"><button class="mode-button" id="angle-mode">DEG</button><div class="expression" id="expression"></div></div>
           <div class="result-row"><div class="result" id="result">0</div><button class="copy-button" id="copy-result" title="Copy result" aria-label="Copy result">▢</button></div>
+          <div class="mascot"><span class="mascot-face" aria-hidden="true">🤓</span><span>Math is magic!</span></div>
         </div>
         <div class="utility-row">
           <button class="utility-button" data-memory="clear">MC</button><button class="utility-button" data-memory="recall">MR</button>
@@ -145,7 +190,7 @@
           <button class="key soft" data-action="copy">COPY</button><button class="key soft" data-insert="π">π</button><button class="key" data-insert="1">1</button><button class="key" data-insert="2">2</button><button class="key" data-insert="3">3</button><button class="key operator" data-insert="+">+</button>
           <button class="key soft" data-insert="00">00</button><button class="key soft" data-insert=".">.</button><button class="key" data-insert="0">0</button><button class="key soft" data-action="open">( )</button><button class="key operator" data-insert="−">−</button><button class="key equals" data-action="equals">=</button>
         </div>
-        <div class="hint">Enter to calculate · Esc to clear · Backspace to delete · Click a history result to reuse it</div>
+        <div class="hint" id="hint" aria-live="polite">Enter to calculate · Esc to clear · Backspace to delete · Click a history result to reuse it</div>
       </section>
       <aside class="history-panel">
         <div class="history-head"><div class="history-title">History</div><button class="clear-history" id="clear-history">Clear all</button></div>
@@ -157,8 +202,9 @@
     (() => {
       const $ = (selector) => document.querySelector(selector);
       const expressionEl = $("#expression"), resultEl = $("#result"), keypad = $("#keypad");
-      let expression = "", answer = 0, memory = 0, degrees = true, justEvaluated = false;
+      let expression = "", answer = 0, memory = 0, degrees = true, justEvaluated = false, soundEnabled = true, audioContext;
       const history = [];
+      const cheers = ["Great job!", "Amazing!", "Keep learning!", "Math magic!", "You nailed it!"];
 
       function format(value) {
         if (!Number.isFinite(value)) throw new Error(value === Infinity || value === -Infinity ? "Cannot divide by zero" : "Result is not a real number");
@@ -285,6 +331,30 @@
           } else resultEl.textContent = "…";
         }
       }
+      function playClick() {
+        if (!soundEnabled) return;
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContext) return;
+        audioContext ||= new AudioContext();
+        if (audioContext.state === "suspended") audioContext.resume();
+        const oscillator = audioContext.createOscillator(), gain = audioContext.createGain();
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(660, audioContext.currentTime);
+        oscillator.frequency.exponentialRampToValueAtTime(880, audioContext.currentTime + 0.045);
+        gain.gain.setValueAtTime(0.055, audioContext.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioContext.currentTime + 0.065);
+        oscillator.connect(gain); gain.connect(audioContext.destination);
+        oscillator.start(); oscillator.stop(audioContext.currentTime + 0.07);
+      }
+      function celebrate() {
+        const hint = $("#hint");
+        hint.textContent = cheers[Math.floor(Math.random() * cheers.length)];
+        hint.classList.remove("cheer");
+        resultEl.classList.remove("celebrate");
+        void hint.offsetWidth;
+        hint.classList.add("cheer");
+        resultEl.classList.add("celebrate");
+      }
       function insert(value) {
         if (justEvaluated && (/^[0-9.]$/.test(value) || value === "00")) expression = "";
         justEvaluated = false;
@@ -310,6 +380,7 @@
           justEvaluated = true;
           renderHistory();
           update();
+          celebrate();
         } catch (error) { resultEl.textContent = error.message; resultEl.classList.add("error"); }
       }
       function renderHistory() {
@@ -364,16 +435,30 @@
       }));
       $("#angle-mode").addEventListener("click", event => { degrees = !degrees; event.currentTarget.textContent = degrees ? "DEG" : "RAD"; update(); });
       $("#theme-toggle").addEventListener("click", () => {
-        const light = document.documentElement.dataset.theme !== "light";
-        document.documentElement.dataset.theme = light ? "light" : "dark";
-        $("#theme-toggle").textContent = light ? "☾" : "☼";
-        localStorage.setItem("orbit-theme", light ? "light" : "dark");
+        const dark = document.documentElement.dataset.theme !== "dark";
+        document.documentElement.dataset.theme = dark ? "dark" : "light";
+        $("#theme-toggle").textContent = dark ? "☼" : "☾";
+        $("#theme-toggle").setAttribute("aria-label", dark ? "Switch to light theme" : "Switch to dark theme");
+        try { localStorage.setItem("orbit-theme", dark ? "dark" : "light"); } catch (error) { /* Theme persistence is optional when storage is unavailable. */ }
+      });
+      $("#sound-toggle").addEventListener("click", event => {
+        soundEnabled = !soundEnabled;
+        event.currentTarget.textContent = soundEnabled ? "♫" : "🔇";
+        event.currentTarget.setAttribute("aria-label", soundEnabled ? "Mute sounds" : "Turn sounds on");
+        event.currentTarget.title = soundEnabled ? "Mute button sounds" : "Turn button sounds on";
+      });
+      document.addEventListener("click", event => {
+        if (event.target.closest("button")) playClick();
       });
       $("#clear-history").addEventListener("click", () => { history.length = 0; renderHistory(); });
       $("#copy-result").addEventListener("click", copyResult);
       try {
         const savedTheme = localStorage.getItem("orbit-theme");
-        if (savedTheme) { document.documentElement.dataset.theme = savedTheme; $("#theme-toggle").textContent = savedTheme === "light" ? "☾" : "☼"; }
+        if (savedTheme === "light" || savedTheme === "dark") {
+          document.documentElement.dataset.theme = savedTheme;
+          $("#theme-toggle").textContent = savedTheme === "light" ? "☾" : "☼";
+          $("#theme-toggle").setAttribute("aria-label", savedTheme === "light" ? "Switch to dark theme" : "Switch to light theme");
+        }
       } catch (error) { /* Theme persistence is optional when storage is unavailable. */ }
       document.addEventListener("keydown", event => {
         if (event.ctrlKey || event.metaKey || event.altKey) return;
